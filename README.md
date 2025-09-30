@@ -3,6 +3,12 @@
 
 A comprehensive dashboard built with Streamlit to analyze any public or private (that you follow) Instagram profile. It provides detailed visual analytics, performance metrics, and generates strategic recommendations using the Google Gemini AI.
 
+[Deployed Link(Please read instruction carefully)](https://zxecoder-insta-analytics-app-psr04p.streamlit.app/)
+
+Please add this before continuing`eg:sessionid=4412650301%3ALpZPAZV030k4dE%3A12%3AAYiZBwxIDFEhIjfhoJwJyQW1kY2NykF7UtuugYIF-g; csrftoken=N5djIJ3s_MbpOKUu3MSmDl`
+
+
+
 ![](assets/1.png)
 ![](assets/2.png)
 ![](assets/3.png)
