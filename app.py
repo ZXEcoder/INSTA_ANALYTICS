@@ -15,7 +15,7 @@ from dotenv import load_dotenv
 # Loads variables from .env file
 load_dotenv()
 api_key = os.getenv("API_KEY")
-
+api_key = st.secrets["API_KEY"]
 # Set page configuration
 st.set_page_config(
     page_title="Instagram Analytics AI Dashboard",
