@@ -279,21 +279,52 @@ def display_posts_analytics(posts_df, profile_data):
                           title='Content Type Distribution')
         st.plotly_chart(fig_type, use_container_width=True)
     
-    st.markdown("### 🔥 Top Performing Posts")
+    st.markdown("### 🔥 Top Performing Content (by Engagement)")
     
     col1, col2 = st.columns(2)
     
+    photos_df = posts_df[posts_df['type'] == 'photo'].copy()
+    videos_df = posts_df[posts_df['type'] == 'video'].copy()
+
     with col1:
-        top_likes = posts_df.nlargest(5, 'likes')[['shortcode', 'likes', 'comments', 'timestamp']]
-        top_likes['timestamp'] = top_likes['timestamp'].dt.strftime('%Y-%m-%d')
-        st.subheader("Most Liked Posts")
-        st.dataframe(top_likes, use_container_width=True, hide_index=True)
-    
+        st.subheader("🏆 Top 5 Photo Posts")
+        if not photos_df.empty:
+            photos_df['engagement'] = photos_df['likes'] + photos_df['comments']
+            top_photos = photos_df.nlargest(5, 'engagement')
+            top_photos['timestamp'] = top_photos['timestamp'].dt.strftime('%Y-%m-%d')
+            st.dataframe(
+                top_photos[['shortcode', 'likes', 'comments', 'engagement', 'timestamp']], 
+                use_container_width=True, 
+                hide_index=True,
+                column_config={
+                    "shortcode": st.column_config.LinkColumn("Post", display_text="🔗 View", base_url="https://instagram.com/p/"),
+                    "likes": "❤️ Likes",
+                    "comments": "💬 Comments",
+                    "engagement": "🎯 Engagement"
+                }
+            )
+        else:
+            st.info("No photo posts found to analyze.")
+
     with col2:
-        top_comments = posts_df.nlargest(5, 'comments')[['shortcode', 'likes', 'comments', 'timestamp']]
-        top_comments['timestamp'] = top_comments['timestamp'].dt.strftime('%Y-%m-%d')
-        st.subheader("Most Commented Posts")
-        st.dataframe(top_comments, use_container_width=True, hide_index=True)
+        st.subheader("🎬 Top 5 Video Posts")
+        if not videos_df.empty:
+            videos_df['engagement'] = videos_df['likes'] + videos_df['comments']
+            top_videos = videos_df.nlargest(5, 'engagement')
+            top_videos['timestamp'] = top_videos['timestamp'].dt.strftime('%Y-%m-%d')
+            st.dataframe(
+                top_videos[['shortcode', 'likes', 'comments', 'engagement', 'timestamp']], 
+                use_container_width=True, 
+                hide_index=True,
+                column_config={
+                    "shortcode": st.column_config.LinkColumn("Post", display_text="🔗 View", base_url="https://instagram.com/p/"),
+                    "likes": "❤️ Likes",
+                    "comments": "💬 Comments",
+                    "engagement": "🎯 Engagement"
+                }
+            )
+        else:
+            st.info("No video posts found to analyze.")
     
     st.markdown("### 📊 Engagement Distribution")
     
@@ -302,6 +333,7 @@ def display_posts_analytics(posts_df, profile_data):
                              hover_data=['timestamp', 'caption'],
                              title='Likes vs Comments Distribution')
     st.plotly_chart(fig_scatter, use_container_width=True)
+
 
 def display_recent_posts_grid(posts_df):
     """Display recent posts in a grid"""
@@ -319,7 +351,7 @@ def display_recent_posts_grid(posts_df):
                 try:
                     response = requests.get(post['thumbnail_url'])
                     img = Image.open(BytesIO(response.content))
-                    st.image(img, use_container_width=True) # <-- CORRECT PARAMETER
+                    st.image(img, use_container_width=True)
                 except:
                     st.info("🖼️ Image")
             
